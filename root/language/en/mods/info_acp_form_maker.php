@@ -25,14 +25,12 @@ if (empty($lang) || !is_array($lang))
 
 // Merge the following language entries into the lang array
 $lang = array_merge($lang, array(
-
-	'ACP_FORM_MAKER'              => 'phpBB Form Creator',
-
+	'ACP_FORM_MAKER'              => 'Form Maker',
 	'ACP_CAT_FORM_MAKER'          => 'Form Maker',
 	'ACP_CAT_FORM_MAKER_EXPLAIN'  => 'Here you manage your forms. ',
-	'ACP_FORM_MAKER'              => 'Forms setup',
-
-	//'USE_FORUM_NAME'              => 'This form is used by: %s',
+	'ACP_FORM_MAKER'              => 'phpBB Form Creator',
+	'ACP_FORM_MAKER_CONFIG'       => 'Form Maker Config',
+	'acl_a_form_maker'            => array('lang' => 'Can manage Form Maker', 'cat' => 'posting'),
 ));
 
 ?>

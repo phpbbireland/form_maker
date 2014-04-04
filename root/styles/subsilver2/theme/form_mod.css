@@ -1,0 +1,5 @@
+/* form_mod */
+.mandatory {
+	color: #FF0000;
+}
+pre {font-family: Consolas, monospace; font-size: 1em; overflow: auto}

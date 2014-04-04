@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.phpbb.com/mods/xml/modx-1.2.6.xsd">
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+    <title lang="en">phpBB3 Form Mod</title>
+
+	<description lang="en">Create forms to collect data from you members in any forum (one form per forum)</description>
+
+	<author-notes lang="en"><![CDATA[Most of the credit for this mod goes to Sajaki @ www.bbdkp.com for his Appform Mod...
+	The original Kiss Portal Form Maker mod was rewritten to encompass the Appform code, albeit alter and extended...
+
+	This mod allows admin to create a form for any given forum.
+	The form is used to collect data from members in a controller manner.
+
+
+	When posting a new post the user has the option to enter information in form mode... 
+	The form is only available when posting the first post, all other posts (replies) are treated as normal...
+	The mod is ideal for forums dealing with reviews, bug reports etc...
+
+	Validation of form data relies on HTML5 (client side validation) and is supported in Firefox, Opera, Chrome, IE 10 and other browsers (Safari does not currently support HTML5 form validation)... If the forms are used to collect crucial data, you may wish to add your own javascript validation code....
+
+	Please note we do not use conformation for every action in the ACP...  
+	This speeds up management substantially... (feels like Ajax ;) 
+
+	]]></author-notes>
+
+	<author-group>
+		<author>
+			<username>michaelo</username>
+			<realname>Michael O'Toole</realname>
+			<homepage>http://www.phpbbreland.com/</homepage>
+			<email>o2l@eircom.net</email>
+		</author>
+		<copy>
+			<file from="root/styles/subsilver2/template/portal.js" to="styles/subsilver2/template/portal.js"/>
+			<file from="root/styles/subsilver2/template/forms/form_maker.html" to="styles/subsilver2/template/forms/form_maker.html"/>
+		</copy>
+	</author-group>
+
+	<mod-version lang="en"><![CDATA[0.0.2]]></mod-version>
+
+	<installation>
+		<level>intermediate</level>
+		<time>500</time>
+		<target-version>3.0.12</target-version>
+	</installation>
+
+	<history>
+		<entry>
+			<date>2013-07-07</date>
+			<rev-version>0.0.2</rev-version>
+			<changelog lang="en">
+				<change>None (still in first release)</change>
+			</changelog>
+		</entry>
+	</history>
+
+	<meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+</header>
+
+<action-group>
+<copy>
+      <file from="root/styles/subsilver2/*.*" to="styles/subsilver2/*.*" />
+</copy>
+
+		<open src="styles/subsilver2/template/posting_buttons.html">
+			<edit>
+				<find><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/editor.js"></script>]]></find>
+				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/portal.js"></script>]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[<div id="format-buttons">]]></find>
+				<action type="after-add"><![CDATA[	<!-- IF MODE == 'post' -->
+	<input type="button" class="button2" accesskey="f" name="useform" value="{L_OPEN_FORM}" style="font-weight:normal; width: 50px" onclick="ShowHide('thisform','message-box');ShowHide('smiley-box','format-buttons');ShowHide('form_hide');" title="{L_OPEN_FORM_EXPLAIN}" />
+	<!-- ELSEIF MODE == 'edit' -->
+	<!-- may add edit in form mode later -->
+	<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[</div>]]></find>
+				<action type="after-add"><![CDATA[<!-- IF MODE == 'edit' --><div class="form_help">{L_FORM_HELP_1}</div><!-- ENDIF -->
+]]></action>
+			</edit>
+		</open>
+		<open src="styles/subsilver2/template/posting_editor.html">
+			<edit>
+				<find><![CDATA[			</fieldset>
+
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+	<!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[
+<!-- INCLUDE forms/form_maker.html -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	<div class="panel bg2">]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[	<div]]></inline-find>
+					<inline-action type="after-add"><![CDATA[ id="form_hide"]]></inline-action>
+				</inline-edit>
+			</edit>
+		</open>
+
+	<diy-instructions lang="en-gb"><![CDATA[Purge cache...]]></diy-instructions>
+
+</action-group>
+</mod>

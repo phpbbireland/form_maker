@@ -33,8 +33,7 @@ class acp_form_maker
 		$user->add_lang(array('mods/form_maker'));
 		$this->tpl_name = 'acp_form_maker';
 		$this->page_title = 'ACP_FORM_MAKER';
-
-		$form_key = md5(uniqid(rand(), true));
+		$form_key = 'form_maker';
 		add_form_key($form_key);
 
 		$mode = request_var('mode', 'manage');
@@ -65,9 +64,10 @@ class acp_form_maker
 					$first_forum_id = get_first_forum_id();
 				}
 
-				$fid = $form_id  = (int)request_var('form_id', $first_forum_id);
+				$form_id  = (int) request_var('form_id', $first_forum_id);
+				$id = (int) request_var('id', 0);
 
-				$fname = get_forums($fid);
+				$fname = get_forums($form_id);
 
 				$link = '<br /><a href="' . append_sid("index.$phpEx", "i=form_maker&amp;mode=manage") . '">' . $user->lang['FORM_MAKER_ACP_RETURN'] . '</a>';
 				$update = (isset($_POST['update'])) ? true : false;
@@ -76,18 +76,19 @@ class acp_form_maker
 				$move_down = (isset($_GET['move_down'])) ? true : false;
 				$delete = (isset($_GET['delete'])) ? true : false;
 
-
 				if ($update)
 				{
 					// ignore the rest if updating //
 					$addnew = $move_down = $move_up = $delete = 0;
 				}
 
-				if ($move_down or $move_up)
+				if ($move_down || $move_up)
 				{
-					$fid = (int)request_var('fid', 0);
+					$form_id = (int) request_var('form_id', 0);
+					$id = (int) request_var('id', 0);
 
-					$sql = 'SELECT ndx_order FROM ' . FORM_MAKER_TABLE . ' where id =  ' . request_var('id', 0) . ' AND form_id = ' . $fid;
+					$sql = 'SELECT ndx_order FROM ' . FORM_MAKER_TABLE . ' where id =  ' . $id . ' AND form_id = ' . $form_id;
+
 					$result = $db->sql_query($sql);
 
 					$current_order = (int) $db->sql_fetchfield('ndx_order', 0, $result);
@@ -104,33 +105,37 @@ class acp_form_maker
 					}
 
 					// find current id with new order and move that one notch, if any
-					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . ' SET ndx_order = ' . $current_order . ' WHERE ndx_order = ' . $new_order . ' AND form_id = ' . $fid;
+					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . ' SET ndx_order = ' . $current_order . ' WHERE ndx_order = ' . $new_order . ' AND form_id = ' . $form_id;
 					$db->sql_query($sql);
 
 					// now increase old order
-					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . ' SET ndx_order = ' . $new_order . ' where id = ' . request_var('id', 0) . ' AND form_id = ' . $fid;
+					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . ' SET ndx_order = ' . $new_order . ' where id = ' . $id . ' AND form_id = ' . $form_id;
 					$db->sql_query($sql);
 
 					$move_down = $move_up = false;
+
+					//reload page with current forum_id
+					reload_page($form_id);
 				}
 
 				if($delete)
 				{
-					$sql = 'DELETE FROM ' . FORM_MAKER_TABLE . ' where id = ' . request_var('id', 0);
+					$sql = 'DELETE FROM ' . FORM_MAKER_TABLE . ' where id = ' . $id;
+
 					$db->sql_query($sql);
 
-					$form_id = $fid = (int)request_var('fid', 0);
+					$form_id = $form_id = (int)request_var('form_id', 0);
 				}
 
-				//user pressed update contentss
+				//user pressed update contents
 				if ($update)
 				{
-					$q_types     = utf8_normalize_nfc(request_var('q_type', array(0 => ''), true));
-					$q_names     = utf8_normalize_nfc(request_var('q_name', array(0 => ''), true));
-					$q_hint      = utf8_normalize_nfc(request_var('q_hint', array(0 => ''), true));
-					$q_options   = utf8_normalize_nfc(request_var('q_options', array(0 => ''), true));
-					$form_id     = (int)request_var('form_id', 1);
-					$q_ndx_order = utf8_normalize_nfc(request_var('q_ndx_order', array(0 => ''), true));
+					$q_types      = utf8_normalize_nfc(request_var('q_type', array(0 => ''), true));
+					$q_names      = utf8_normalize_nfc(request_var('q_name', array(0 => ''), true));
+					$q_hint       = utf8_normalize_nfc(request_var('q_hint', array(0 => ''), true));
+					$q_options    = utf8_normalize_nfc(request_var('q_options', array(0 => ''), true));
+					$form_id      = (int)request_var('form_id', 1);
+					$q_ndx_order  = utf8_normalize_nfc(request_var('q_ndx_order', array(0 => ''), true));
 
 					foreach ($q_hint as $key => $form_values)
 					{
@@ -142,10 +147,10 @@ class acp_form_maker
 
 						// updating contents //
 						$data = array(
-							'type'     => $q_types[$key] ,
-							'name'     => $q_names[$key] ,
-							'hint'     => $q_hint[$key] ,
-							'options'  => $q_options[$key],
+							'type'      => $q_types[$key] ,
+							'name'      => $q_names[$key] ,
+							'hint'      => $q_hint[$key] ,
+							'options'   => $q_options[$key],
 							'ndx_order' => $q_ndx_order[$key]
 						);
 
@@ -161,9 +166,9 @@ class acp_form_maker
 
 				if ($addnew)
 				{
-					$fid = (int) request_var('form_id', 0);
+					$form_id = (int) request_var('form_id', 0);
 
-					$sql = 'SELECT max(ndx_order) + 1 as maxorder  FROM ' . FORM_MAKER_TABLE . ' WHERE form_id = ' . $fid;
+					$sql = 'SELECT max(ndx_order) + 1 as maxorder  FROM ' . FORM_MAKER_TABLE . ' WHERE form_id = ' . $form_id;
 
 					$result = $db->sql_query($sql);
 
@@ -172,7 +177,7 @@ class acp_form_maker
 
 					$sql_ary = array(
 						'ndx_order' => ($max_order > 0) ? $max_order : 1, // we don't use index 0 //
-						'form_id'   => $fid,
+						'form_id'   => $form_id,
 						'name'      => utf8_normalize_nfc(request_var('name', ' ', true)) ,
 						'hint'      => utf8_normalize_nfc(request_var('hint', ' ', true)) ,
 						'options'   => utf8_normalize_nfc(request_var('options', ' ', true)) ,
@@ -192,7 +197,7 @@ class acp_form_maker
 
 				if($form_id == 0)
 				{
-					$form_id = $fid;
+					$form_id = $form_id;
 				}
 
 				// main sql //
@@ -215,26 +220,30 @@ class acp_form_maker
 					}
 
 					$template->assign_block_vars('form_template', array(
-						'FID'        => $row['form_id'],
-						'NDX_ORDER'  => $row['ndx_order'] ,
-						'NAME'       => $row['name'],
-						'TYPE'       => $row['type'],
-						'HINT'       => $row['hint'],
-						'MANDATORY'  => $row['mandatory'] ,
-						'OPTIONS'    => $row['options'] ,
-						'CHECKED'    => $checked ,
-						'ID'         => $row['id'] ,
+						'FID'       => $row['form_id'],
+						'NDX_ORDER' => $row['ndx_order'] ,
+						'NAME'      => $row['name'],
+						'TYPE'      => $row['type'],
+						'HINT'      => $row['hint'],
+						'MANDATORY' => $row['mandatory'] ,
+						'OPTIONS'   => $row['options'] ,
+						'CHECKED'   => $checked ,
+						'ID'        => $row['id'] ,
 
-						'U_DELETE' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;delete=1&amp;id={$row['id']}&amp;fid={$row['form_id']}") ,
-						'U_MOVE_UP' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;move_up=1&amp;id={$row['id']}&amp;fid={$row['form_id']}") ,
-						'U_MOVE_DOWN' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;move_down=1&amp;id={$row['id']}&amp;fid={$row['form_id']}")));
+						'U_DELETE' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;delete=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}") ,
+						'U_MOVE_UP' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;move_up=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}") ,
+						'U_MOVE_DOWN' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;move_down=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}")));
 
 					$type = array(
-						'Inputbox' ,
-						'Textbox' ,
-						'Selectbox' ,
-						'Radiobuttons' ,
-						'Checkboxes'
+						'text' ,
+						'textbox' ,
+						'selectbox' ,
+						'radiobuttons' ,
+						'checkbox',
+						'password',
+						'email',
+						'url',
+						'file'
 					);
 
 					foreach ($type as $t_name => $t_value)
@@ -249,7 +258,7 @@ class acp_form_maker
 				}
 
 				$template->assign_vars(array(
-					'FID'             => $fid,
+					'FID'             => $form_id,
 					'ELEMENTS'        => $elements,
 					'L_FORM_NO_FORM'  => sprintf($user->lang['FORM_NO_FORM'], $fname),
 				));
@@ -257,30 +266,33 @@ class acp_form_maker
 				$db->sql_freeresult($result);
 
 				$this->page_title = $user->lang['ACP_FORM_MAKER'];
-				$this->tpl_name = 'acp_form_maker';// . $mode;
+				$this->tpl_name = 'acp_form_maker';
+				break;
+
+				default:
+
 				break;
 		}
 
 		$template->assign_vars(array(
-			'REPORT'  => 'Mode = [' . $mode . '] Fid = [' . $fid . '] Forum ID = [' . $form_id . '] Count = [' . $elements . '] Form Name = [' . $fname . ']',
-			'LINK'    => $link,
+			'REPORT'  => 'Debug: ' . 'Mode = [' . $mode . '] Forum ID = [' . $form_id . '] Elements = [' . $elements . '] Form Name = [' . $fname . ']',
+			'LINK'	=> $link,
 		));
 
-		build_preview($form_id, $fid);
+		build_preview($form_id, $form_id);
 	}
 }
 
-function get_forums($fid)
+function reload_page($id)
+{
+	;
+}
+
+function get_forums($form_id)
 {
 	global $db, $template, $first_forum_id;
 	$store = '';
 
-/*
-	$sql = "SELECT DISTINCT form_id, forum_id, forum_name
-		FROM " . FORM_MAKER_TABLE . " AS m, " . FORUMS_TABLE . " AS f
-		WHERE m.form_id = f.forum_id
-		ORDER BY m.id";
-*/
 	$sql = "SELECT DISTINCT forum_id, forum_name
 		FROM ". FORUMS_TABLE . "
 		WHERE forum_type = " . FORUM_POST . "
@@ -291,11 +303,12 @@ function get_forums($fid)
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$template->assign_block_vars('forms', array(
-			'FORUM_ID'    => $row['forum_id'],
-			'FORUM_NAME'  => $row['forum_name'],
+			'FORUM_ID'   => $row['forum_id'],
+			'FORUM_NAME' => $row['forum_name'],
+			'SELECT'     => ($row['forum_id'] == $form_id) ? ' selected="selected"' : '',
 		));
 
-		if ($fid == $row['forum_id'])
+		if ($form_id == $row['forum_id'])
 		{
 			$store = $row['forum_name'];
 		}
@@ -319,7 +332,11 @@ function get_first_forum_id()
 	return($row['forum_id']);
 }
 
-function build_preview($form_id, $fid)
+/***
+* Sections of this code are taken from the Appform Mod, copyright Sajaki 2012
+**/
+
+function build_preview($form_id, $form_id)
 {
 	global $db, $template;
 
@@ -331,66 +348,72 @@ function build_preview($form_id, $fid)
 
 	$result = $db->sql_query($sql);
 
+	$file_count = -1;
+
 	while ($row = $db->sql_fetchrow($result))
 	{
-		switch($row['type'])
+
+		if ($row['type'] == 'file')
 		{
-			case 'Inputbox':
-				$type = '<input style="border-radius: 5px;" class="text" style="width:300px;"
-				type="text" name="templatefield_' . $row['ndx_order'] . '"
-				placeholder="' . $row['hint'] . '"
-				size="40" maxlength="60" tabindex="' . $row['ndx_order'] . '" />';
-				break;
-			case 'Textbox':
-				$type = '<textarea style="border-radius: 5px;" class="text" name="templatefield_' . $row['ndx_order'] . '" rows="3" cols="76"
-				tabindex="' . $row['ndx_order'] . '" onselect="storeCaret(this);"
-				onclick="storeCaret(this);"
-				placeholder="' . $row['hint'] . '"
-				onkeyup="storeCaret(this);" ></textarea>';
-				break;
-			case 'Selectbox':
-			    $type = '<select style="border-radius: 5px;" class="inputbox" name="templatefield_' . $row['ndx_order'] . '" tabindex="' . $row['ndx_order'] . '">';
-			    $type .= '<option value="">----------------</option>';
-			         $select_option = explode(',', $row['options']);
-			         foreach($select_option as $value)
-			         {
-			             $type .='<option value="'. $value .'">'. $value .'</option>';
-			         }
-			    $type .= '</select>';
-				break;
-			case 'Radiobuttons':
-			    $radio_option = explode(',', $row['options']);
+			$file_count++;
+		}
 
-			    $type = '';
-			    foreach($radio_option as $value)
-			    {
-			       $type .='<input type="radio" class="radio" name="templatefield_'. $row['ndx_order'] .'" value="'. $value .'"/>&nbsp;'. $value .'&nbsp;&nbsp;';
-			    }
-				break;
-			case 'Checkboxes':
-		        $check_option = explode(',', $row['options']);
+		switch (strtolower($row['type']))
+		{
+			case 'email':
+			case 'password':
+			case 'url':
+			case 'text':
+			case 'file':
+				$type = '<input style="border-radius: 5px; width:300px" class="text" type="' . $row['type']. '" name="templatefield_' . $row['name'] . $file_count . '" placeholder="' . $row['hint'] . '" size="40" maxlength="255" tabindex="' . $row['ndx_order'] . '" />';
+			break;
 
-		        $type = '';
-		        foreach($check_option as $value)
-		        {
-		           $type .='<input class="checkbox" type="checkbox" name="templatefield_'. $row['ndx_order'] .'[]" value="'. $value .'"/>&nbsp;'. $value .'&nbsp;&nbsp;';
-		        }
-				break;
+			case 'textbox':
+				$type = '<textarea style="border-radius: 5px;" class="text" name="templatefield_' . $row['name'] . '" rows="3" cols="76" tabindex="' . $row['ndx_order'] . '" onselect="storeCaret(this);" onclick="storeCaret(this);" placeholder="' . $row['hint'] . '" onkeyup="storeCaret(this);"></textarea>';
+			break;
+			case 'selectbox':
+				$type = '<select style="border-radius: 5px;" class="inputbox" name="templatefield_' . $row['name'] . '" tabindex="' . $row['ndx_order'] . '">';
+				$type .= '<option value="">----------------</option>';
+				$select_option = explode(',', $row['options']);
+				foreach($select_option as $value)
+				{
+					$type .='<option value="'. $value .'">'. $value .'</option>';
+				}
+				$type .= '</select>';
+			break;
+			case 'radiobuttons':
+				$radio_option = explode(',', $row['options']);
+
+				$type = '';
+				foreach($radio_option as $value)
+				{
+					$type .='<input type="radio" name="templatefield_'. $row['name'] .'" value="'. $value . '" />&nbsp;'. $value .'&nbsp;&nbsp;';
+				}
+			break;
+			case 'checkbox':
+				$check_option = explode(',', $row['options']);
+
+				$type = '';
+				foreach($check_option as $value)
+				{
+					$type .='<input type="checkbox" name="templatefield_'. $row['name'].'[]" value="'. $value .'" />&nbsp;'. $value .'&nbsp;&nbsp;';
+				}
+			break;
 		}
 
 		$mandatory = '';
 
 		if ($row['mandatory'] == '1')
 		{
-			$mandatory = '&nbsp;<span style="color:red">' . '*' . '</span>';
+			$mandatory = '<span class="mandatory">*</span>';
 		}
 		$template->assign_block_vars('form_apptemplate', array(
-			'NDX_ORDER'		=> $row['ndx_order'],
-			'NAME'			=> $row['name'],
-			'HINT'		    => $row['hint'],
-			'OPTIONS'   	=> $row['options'],
-			'TYPE'			=> (isset($type)) ? $type : '',
-			'MANDATORY' 	=> $mandatory)
+			'NDX_ORDER' => $row['ndx_order'],
+			'NAME'      => $row['name'],
+			'HINT'      => $row['hint'],
+			'OPTIONS'   => $row['options'],
+			'TYPE'      => (isset($type)) ? $type : '',
+			'MANDATORY' => $mandatory)
 		);
 
 	}

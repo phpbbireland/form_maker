@@ -4,7 +4,7 @@
 * @author michaelo phpbbireland@gmail.com - http://www.phpbbireland.com
 *
 * @package form_maker
-* @version 0.0.1
+* @version 1.0.0
 * @copyright (c) 2012 Michael O'Toole (phpbbireland.com)
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -39,12 +39,12 @@ $version_config_name = 'form_maker_version';
 $language_file = 'form_maker_install_umil';
 $logo_img = 'form_maker_install.png';
 
-include($phpbb_root_path . 'form_maker_install/sql_data.' . $phpEx);
+include($phpbb_root_path . 'install_phpbb_form_mod/sql_data.' . $phpEx);
 
 $versions = array(
 
-	// Version 0.0.1
-	'0.0.1' => array(
+	// Version 1.0.0
+	'1.0.0' => array(
 		'permission_add' => array(
 			array('a_form_maker', 1),
 		),
@@ -53,17 +53,21 @@ $versions = array(
 			array('ROLE_ADMIN_FULL', 'a_form_maker'),
 		),
 
+		'config_add' => array(
+			array('form_maker_enabled', 1),
+		),
+
 		'table_add' => array(
 			array('phpbb_form_maker', array(
 					'COLUMNS' => array(
 						'id'				=> array('UINT', NULL, 'auto_increment'),
 						'form_id'			=> array('UINT', '0'),
 						'ndx_order'			=> array('UINT', '0'),
-						'name'				=> array('VCHAR:100', ''),
-						'type'				=> array('VCHAR:50', ''),
+						'name'				=> array('VCHAR', ''),
+						'type'				=> array('VCHAR', ''),
 						'hint'				=> array('VCHAR', ''),
 						'options'			=> array('VCHAR', ''),
-						'mandatory'			=> array('BOOL', '1'),
+						'mandatory'			=> array('BOOL', '0'),
 					),
 					'PRIMARY_KEY'	=> 'id',
 				),
@@ -71,17 +75,27 @@ $versions = array(
 
 		),
 
+		'module_add' => array(
+			array('acp', 'ACP_CAT_DOT_MODS', 'FORM_MAKER'),
+
+			array('acp', 'FORM_MAKER', array(
+					'module_basename'	=> 'form_maker',
+					'module_langname'	=> 'ACP_FORM_MAKER',
+					'module_mode'		=> 'manage',
+					'module_auth'		=> 'acl_a_form_maker',
+				),
+			),
+		),
+
 		'table_insert' => array(
 			array($form_maker_table, $form_maker_array),
 		),
 
-		// purge all cache
-		'cache_purge' => array(),
+		// purge the cache
+		'cache_purge' => array('', 'imageset', 'template', 'theme'),
 	),
 
 );//version
-
-
 
 include($phpbb_root_path . 'umil/umil_auto.' . $phpEx);
 

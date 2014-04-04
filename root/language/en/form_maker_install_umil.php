@@ -35,27 +35,22 @@ if (empty($lang) || !is_array($lang))
 
 
 $lang = array_merge($lang, array(
-
-	'KISS_PORTAL_ENGINE' 		=> 'Kiss Portal Engine',
-	'STARGATE_PORTAL_EXPLAIN' 	=> 'Simplified version of Stargate Portal for phpBB3 with a basic features all of which are configurable via the ACP.',
-
-	'NONE'				=> 'Not Installed',
-	'INSTALL_PANEL'		=> 'Form Maker Installation Panel',
-	'SUB_INTRO'			=> 'Introduction',
-	'OVERVIEW_BODY'		=> '',
-	'SELECT_LANG'		=> 'Select language',
-	'SUB_SUPPORT'		=> 'Support',
-	'REPORT_INSTALLED'	=> 'The Form Maker Mod in already installed',
-	'INSTALL_INTRO'		=> 'Welcome to the Form Maker Installation <img src="./../form_makler_install.png" alt="" border="none">',
-
-
-	'VERSION_NOT_UP_TO_DATE'	=> 'Your version of the form maker is not up to date. Please continue the update process.',
-	'VERSION_NOT_UP_TO_DATE'	=> 'Cannot retrieve version info... code not yet written.',
+	'ACP_FORM_MAKER'            => 'Form Maker',
+	'FORM_MAKER'                => 'Form Maker',
+	'CURRENT_VERSION'			=> 'Current version',
+	'INSTALL_INTRO'				=> 'Welcome to the Form Maker Installation <img src="./../form_marker_install.png" alt="" border="none">',
+	'INSTALL_PANEL'				=> 'Form Maker Installation Panel',
+	'LATEST_VERSION'			=> 'Latest version',
+	'NONE'						=> 'Not Installed',
+	'OVERVIEW_BODY'				=> '',
+	'REPORT_INSTALLED'			=> 'The Form Maker Mod in already installed',
+	'SELECT_LANG'				=> 'Select language',
+	'SUB_INTRO'					=> 'Introduction',
+	'SUB_SUPPORT'				=> 'Support',
 	'VERSION_CHECK'				=> 'Version check',
 	'VERSION_CHECK_EXPLAIN'		=> 'Checks to see if Form Maker version you are currently running is up to date.',
-	'CURRENT_VERSION'			=> 'Current version',
-	'LATEST_VERSION'			=> 'Latest version',
-
+	'VERSION_NOT_UP_TO_DATE'	=> 'Your version of the form maker is not up to date. Please continue the update process.',
+	'VERSION_NOT_UP_TO_DATEX'	=> 'Cannot retrieve version info... code not yet written.',
 ));
 
 ?>
