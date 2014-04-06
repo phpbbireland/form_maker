@@ -30,16 +30,20 @@
 
 	]]></author-notes>
 
+	<github><![CDATA[https://github.com/phpbbireland/form_maker]]></github>
+
 	<author-group>
 		<author>
+			<realname>Michael O’Toole</realname>
 			<username>michaelo</username>
-			<realname>Michael O'Toole</realname>
-			<homepage>http://www.phpbbreland.com/</homepage>
-			<email>o2l@eircom.net</email>
+			<homepage>http://www.phpbbireland.com/</homepage>
+			<contributions-group>
+				<contributions status="current" from="2006-01-01" position="Developer"/>
+			</contributions-group>			
 		</author>
 	</author-group>
 
-	<mod-version lang="en"><![CDATA[1.0.0]]></mod-version>
+	<mod-version>1.0.0</mod-version>
 
 	<installation>
 		<level>intermediate</level>
@@ -59,14 +63,6 @@
 
 	<meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
 </header>
-	<author-group>
-		<author>
-			<username>michaelo</username>
-			<realname>Michael O'Toole</realname>
-			<homepage>http://www.phpbbreland.com/</homepage>
-			<email>o2l@eircom.net</email>
-		</author>
-	</author-group>
 
 	<action-group>
 		<copy>
