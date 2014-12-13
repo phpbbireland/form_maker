@@ -39,7 +39,7 @@
 		</author>
 	</author-group>
 
-	<mod-version lang="en"><![CDATA[1.0.1]]></mod-version>
+	<mod-version><![CDATA[1.0.2]]></mod-version>
 
 	<installation>
 		<level>intermediate</level>
@@ -49,8 +49,8 @@
 
 	<history>
 		<entry>
-			<date>2013-07-07</date>
-			<rev-version>1.0.1</rev-version>
+			<date>2014-12-13</date>
+			<rev-version>1.0.2</rev-version>
 			<changelog lang="en">
 				<change>None (still in beta release)</change>
 			</changelog>
@@ -59,14 +59,7 @@
 
 	<meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
 </header>
-	<author-group>
-		<author>
-			<username>michaelo</username>
-			<realname>Michael O'Toole</realname>
-			<homepage>http://www.phpbbreland.com/</homepage>
-			<email>o2l@eircom.net</email>
-		</author>
-	</author-group>
+
 
 	<action-group>
 		<copy>
@@ -126,6 +119,26 @@ build_form($forum_id);
 ]]></action>
 	</edit>
 </open>
+
+		<open src="adm/style/admin.css">
+			<edit>
+				<find><![CDATA[.phpinfo td, .phpinfo th, .phpinfo h2, .phpinfo h1 {
+	text-align: left;]]></find>
+				<action type="after-add"><![CDATA[}
+
+/* Form Maker Mod */
+.checkbox {cursor:pointer}
+#dvLoading
+{
+   background: transparent url("../images/loading-page.gif") no-repeat center center;
+   height: 100px;
+   width: 100px;
+   position: fixed;
+   z-index: 1000;
+   left: 50%;
+   top:13%;]]></action>
+			</edit>
+		</open>
 
 <open src="includes/constants.php">
 			<edit>
