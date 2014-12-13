@@ -88,7 +88,10 @@ class acp_form_maker
 					$form_id = (int) request_var('form_id', 0);
 					$id = (int) request_var('id', 0);
 
-					$sql = 'SELECT ndx_order FROM ' . FORM_MAKER_TABLE . ' where id =  ' . $id . ' AND form_id = ' . $form_id;
+					$sql = 'SELECT ndx_order
+						FROM ' . FORM_MAKER_TABLE . '
+						WHERE id =  ' . $id . '
+						AND form_id = ' . $form_id;
 
 					$result = $db->sql_query($sql);
 
@@ -106,11 +109,17 @@ class acp_form_maker
 					}
 
 					// find current id with new order and move that one notch, if any
-					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . ' SET ndx_order = ' . $current_order . ' WHERE ndx_order = ' . $new_order . ' AND form_id = ' . $form_id;
+					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . '
+						SET ndx_order = ' . $current_order . '
+						WHERE ndx_order = ' . $new_order . '
+						AND form_id = ' . $form_id;
 					$db->sql_query($sql);
 
 					// now increase old order
-					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . ' SET ndx_order = ' . $new_order . ' where id = ' . $id . ' AND form_id = ' . $form_id;
+					$sql = 'UPDATE  ' . FORM_MAKER_TABLE . '
+						SET ndx_order = ' . $new_order . '
+						WHERE id = ' . $id . '
+						AND form_id = ' . $form_id;
 					$db->sql_query($sql);
 
 					$move_down = $move_up = false;
@@ -121,7 +130,8 @@ class acp_form_maker
 
 				if($delete)
 				{
-					$sql = 'DELETE FROM ' . FORM_MAKER_TABLE . ' where id = ' . $id;
+					$sql = 'DELETE FROM ' . FORM_MAKER_TABLE . '
+						WHERE id = ' . $id;
 
 					$db->sql_query($sql);
 
@@ -142,7 +152,9 @@ class acp_form_maker
 					{
 						$data = array('mandatory' => isset($_POST['q_mandatory'][$key]) ? '1' : '0');
 
-						$sql = 'UPDATE ' . FORM_MAKER_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $data) . ' WHERE id = ' . $key;
+						$sql = 'UPDATE ' . FORM_MAKER_TABLE . '
+							SET ' . $db->sql_build_array('UPDATE', $data) . '
+							WHERE id = ' . $key;
 
 						$db->sql_query($sql);
 
@@ -155,7 +167,10 @@ class acp_form_maker
 							'ndx_order' => $q_ndx_order[$key]
 						);
 
-						$sql = 'UPDATE ' . FORM_MAKER_TABLE . ' set ' . $db->sql_build_array('UPDATE', $data) . ' WHERE id = ' . $key . ' AND form_id = ' . $form_id;
+						$sql = 'UPDATE ' . FORM_MAKER_TABLE . '
+							SET ' . $db->sql_build_array('UPDATE', $data) . '
+							WHERE id = ' . $key . '
+							AND form_id = ' . $form_id;
 
 						$db->sql_query($sql);
 					}
@@ -169,7 +184,9 @@ class acp_form_maker
 				{
 					$form_id = (int) request_var('form_id', 0);
 
-					$sql = 'SELECT max(ndx_order) + 1 as maxorder  FROM ' . FORM_MAKER_TABLE . ' WHERE form_id = ' . $form_id;
+					$sql = 'SELECT max(ndx_order) + 1 as maxorder
+						FROM ' . FORM_MAKER_TABLE . '
+						WHERE form_id = ' . $form_id;
 
 					$result = $db->sql_query($sql);
 
@@ -193,7 +210,6 @@ class acp_form_maker
 					{
 						trigger_error($user->lang['FORM_MAKER_ACP_QUESTNOTADD'] . $link, E_USER_WARNING);
 					}
-
 				}
 
 				if($form_id == 0)
@@ -314,6 +330,7 @@ function get_forums($form_id)
 			$store = $row['forum_name'];
 		}
 	}
+	$db->sql_freeresult($result);
 	return($store);
 }
 

@@ -3,7 +3,7 @@
 
 /* This is part of the form_maker mod for phpBB3 copyright phpbbireland.com 2012 */
 
-function postform_check(status)
+function postform_check()
 {
 	if (document.forms.postform.subject.value == '')
 	{
@@ -11,7 +11,6 @@ function postform_check(status)
 		document.forms.postform.subject.focus();
 		return(false);
 	}
-
 }
 
 // ]]>
@@ -21,16 +20,17 @@ function postform_check(status)
 <div id="thisform" style="display:none; width:auto; margin-left:auto; margin-right:auto;" class="post bg1">
 	<div class="inner"><span class="corners-top"><span></span></span>
 
-		<div style="margin-bottom: 10px; margin-left: 17.5em; text-align:left;"><span style="color: #ff0000">*</span> {L_MANDATORY}</div>
+		<div style="margin-bottom: 10px; margin-left: 17.5em; text-align:left;"><span class="mandatory">*</span> {L_MANDATORY}</div>
 		<fieldset class="fields2" style="border-radius: 5px;">
 			<!-- BEGIN form_apptemplate -->
 			<dl>
-				<dt><p><strong>{form_apptemplate.NAME}:<span title="{L_MANDATORY}">{form_apptemplate.MANDATORY}</span></strong></p></dt>
+				<dt><label for="templatefield_{form_apptemplate.NAME}">{form_apptemplate.NAME}:</label>{form_apptemplate.MANDATORY}</dt>
 				<dd>{form_apptemplate.TYPE}</dd>
 			</dl>
 			<!-- END form_apptemplate -->
 		</fieldset>
-		<div style="margin-top: -10px; margin-bottom: 20px; margin-left: 17.5em; text-align:left;"> {L_CHECKBOX_MSG}</div>
+
+		<div style="margin-top: -2px; margin-bottom: 20px; margin-left: 17.5em; text-align:left;"> {L_CHECKBOX_MSG}</div>
 		<fieldset class="submit-buttons">
 			<input type="submit" accesskey="s" name="post" value="{L_SUBMIT}" class="button1 default-submit-action" onclick="return postform_check();" />&nbsp;
 			<input type="reset" name="reset" value="{L_RESET}" class="button1" />
@@ -42,13 +42,15 @@ function postform_check(status)
 </div>
 <div id="lblValues"></div>
 
-
 <script type="text/javascript">
 // <![CDATA[
 
 	function toggle_validation()
 	{
-		// copyrignt phpbbireland.com 2013 //
+		/*
+			Turn off postform html5 validation so we can switch on/off for our new form...
+			Otherwise posting for new topics (in this forum) will only work if the new form is used...
+		*/
 
 		var $_hidden = 0;
 		var $_empty = 0;
@@ -59,12 +61,10 @@ function postform_check(status)
 		if ($_hidden == 0)
 		{
 			document.forms.postform.noValidate=true;
-			alert('Turned off validation');
 		}
 		else
 		{
 			document.forms.postform.noValidate=false;
-			alert('Turned on validation');
 		}
 	}
 // ]]>

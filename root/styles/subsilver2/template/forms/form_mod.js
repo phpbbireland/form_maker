@@ -75,7 +75,7 @@ function ShowHide(id1, id2, id3)
 	}
 	if (id3 != '')
 	{
-		SetCookie(id3, onoff, exp);
+		//SetCookie(id3, onoff, exp);
 	}
 }
 	

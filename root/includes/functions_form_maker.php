@@ -45,7 +45,7 @@ if (!function_exists('build_form'))
 
 		$sql = "SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
 			FROM " . FORM_MAKER_TABLE . " AS m, " . FORUMS_TABLE . " AS f
-			WHERE m.form_id = '" . $forum_id . "'
+			WHERE m.form_id = " . (int)$forum_id . "
 			AND m.form_id = f.forum_id
 			ORDER BY ndx_order";
 
@@ -77,9 +77,11 @@ if (!function_exists('build_form'))
 				case 'file':
 					$entry = '<input type="' . $row['type'] . '"' . $na . '" value="' . $row['hint'] . '"' . $id . '" placeholder="' . $row['hint'] . '" ' . $mand . ' size="40" maxlength="255" tabindex="' . $row['ndx_order'] . '" ' . $style . ' />';
 				break;
+
 				case 'textbox':
 					$entry = '<textarea type="textbox"' . $na . '"' . $id . '" rows="3" cols="76" tabindex="' . $row['ndx_order'] . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" placeholder="' . $row['hint'] . '"' . $mand . ' ' . $styleTA . '></textarea>';
 				break;
+
 				case 'selectbox':
 					$entry = '<select type="select"' . $na . '"' . $id . '" tabindex="' . $row['ndx_order'] . '"' . $mand . ' ' . $style . '>';
 					$entry .= '<option value="">----------------</option>';
@@ -90,6 +92,7 @@ if (!function_exists('build_form'))
 					}
 					$entry .= '</select>';
 				break;
+
 				case 'radiobuttons':
 					$radio_option = explode(',', $row['options']);
 					$entry = '';
@@ -98,6 +101,7 @@ if (!function_exists('build_form'))
 					   $entry .='<input type="radio" ' . '" tabindex="' . $row['ndx_order'] . '"' . $mand . $na . '"' . $id . '" value="'. $value .'"/>&nbsp;'. $value .'&nbsp;&nbsp;';
 					}
 				break;
+
 				case 'checkbox':
 					$check_option = explode(',', $row['options']);
 
@@ -107,6 +111,7 @@ if (!function_exists('build_form'))
 					   $entry .='<input type="checkbox" ' . '" tabindex="' . $row['ndx_order'] . '"' . $mand . ' name="templatefield_' . $row['name'] .'[]"' . $id . '" value="'. $value .'" />&nbsp;'. $value .'&nbsp;&nbsp;';
 					}
 				break;
+
 				default:
 				break;
 			}
@@ -152,7 +157,7 @@ if (!function_exists('grab_form_data'))
 
 		$sql = "SELECT *
 			FROM " . FORM_MAKER_TABLE . "
-			WHERE form_id = " . $forum_id . "
+			WHERE form_id = " . (int)$forum_id . "
 			ORDER BY ndx_order";
 		$result = $db->sql_query($sql);
 

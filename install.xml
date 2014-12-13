@@ -124,21 +124,10 @@
 				<action type="before-add"><![CDATA[
 build_form($forum_id);
 ]]></action>
-			</edit>
-		</open>
-		<open src="adm/style/admin.css">
-			<edit>
-				<find><![CDATA[.phpinfo td, .phpinfo th, .phpinfo h2, .phpinfo h1 {
-	text-align: left;
-}]]></find>
-
-<action type="after-add"><![CDATA[/* Form Maker Mod */
-@import url("form_mod.css");
-]]></action>
-</edit>
-
+	</edit>
 </open>
-		<open src="includes/constants.php">
+
+<open src="includes/constants.php">
 			<edit>
 				<find><![CDATA[// Additional tables]]></find>
 				<action type="after-add"><![CDATA[define('FORM_MAKER_TABLE',          $table_prefix . 'form_maker');]]></action>

@@ -123,7 +123,7 @@ How do I delete a form?<br /> &nbsp; &bull; Simply delete all form elements...<b
 'CHECKBOX_NOTE'            => '<strong>Note:</strong>???',
 'CHECKBOX_MSG'             => 'Checkboxes marked as Mandatory, require all elements to be checked (HTML5 Form Validation).',
 'CHECKBOXE_NOTES'          => 'Checkboxes!',
-'CHKNOTE'                  => 'Checkboxes with multiple items are rarely set as <i>mandatory</i> as doing so sets each and every option in the checkbox group as mandatory.',
+'CHKNOTE'                  => 'Checkboxes with multiple items are rarely set as mandatory as doing so, require the user checks each and every item.',
 ));
 
 ?>

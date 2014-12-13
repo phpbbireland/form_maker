@@ -1,8 +1,7 @@
-<link rel="stylesheet" type="text/css" href="{T_THEME_PATH}/form_mod.css" />
 <script type="text/javascript">
 // <![CDATA[
 
-/* Copyrignt phpbbireland.com 2013 */
+/* This is part of the form_maker mod for phpBB3 copyright phpbbireland.com 2012 */
 
 function postform_check()
 {
@@ -21,7 +20,7 @@ function postform_check()
 <div id="thisform" style="display:none; width:auto; margin-left:auto; margin-right:auto;" class="post bg1">
 	<div class="inner"><span class="corners-top"><span></span></span>
 
-		<div style="margin-bottom: 10px; margin-left: 17.5em; text-align:left;"><span class="mandatory">*</span> {L_MANDATORY}</div>
+		<div class="mand"><span class="mandatory">*</span> {L_MANDATORY}</div>
 		<fieldset class="fields2" style="border-radius: 5px;">
 			<!-- BEGIN form_apptemplate -->
 			<dl>
@@ -31,7 +30,7 @@ function postform_check()
 			<!-- END form_apptemplate -->
 		</fieldset>
 
-		<div style="margin-top: -2px; margin-bottom: 20px; margin-left: 17.5em; text-align:left;"> {L_CHECKBOX_MSG}</div>
+		<div class="form_chk_msg"> {L_CHECKBOX_MSG}</div>
 		<fieldset class="submit-buttons">
 			<input type="submit" accesskey="s" name="post" value="{L_SUBMIT}" class="button1 default-submit-action" onclick="return postform_check();" />&nbsp;
 			<input type="reset" name="reset" value="{L_RESET}" class="button1" />

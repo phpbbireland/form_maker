@@ -38,7 +38,7 @@ $lang = array_merge($lang, array(
 	'ACP_FORM_MAKER'            => 'Form Maker',
 	'FORM_MAKER'                => 'Form Maker',
 	'CURRENT_VERSION'			=> 'Current version',
-	'INSTALL_INTRO'				=> 'Welcome to the Form Maker Installation <img src="./../form_marker_install.png" alt="" border="none">',
+	'INSTALL_INTRO'				=> 'Welcome to the Form Maker Installation',
 	'INSTALL_PANEL'				=> 'Form Maker Installation Panel',
 	'LATEST_VERSION'			=> 'Latest version',
 	'NONE'						=> 'Not Installed',
