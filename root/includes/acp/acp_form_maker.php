@@ -33,7 +33,8 @@ class acp_form_maker
 		$user->add_lang(array('mods/form_maker'));
 		$this->tpl_name = 'acp_form_maker';
 		$this->page_title = 'ACP_FORM_MAKER';
-		$form_key = 'form_maker';
+
+		$form_key = md5(uniqid(rand(), true));
 		add_form_key($form_key);
 
 		$mode = request_var('mode', 'manage');
@@ -220,15 +221,15 @@ class acp_form_maker
 					}
 
 					$template->assign_block_vars('form_template', array(
-						'FID'       => $row['form_id'],
-						'NDX_ORDER' => $row['ndx_order'] ,
-						'NAME'      => $row['name'],
-						'TYPE'      => $row['type'],
-						'HINT'      => $row['hint'],
-						'MANDATORY' => $row['mandatory'] ,
-						'OPTIONS'   => $row['options'] ,
-						'CHECKED'   => $checked ,
-						'ID'        => $row['id'] ,
+						'FID'		=> $row['form_id'],
+						'NDX_ORDER'	=> $row['ndx_order'] ,
+						'NAME'		=> $row['name'],
+						'TYPE'		=> $row['type'],
+						'HINT'		=> $row['hint'],
+						'MANDATORY'	=> $row['mandatory'] ,
+						'OPTIONS'	=> $row['options'] ,
+						'CHECKED'	=> $checked ,
+						'ID'		=> $row['id'] ,
 
 						'U_DELETE' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;delete=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}") ,
 						'U_MOVE_UP' => append_sid("{$phpbb_admin_path}index.$phpEx", "i=form_maker&amp;mode=manage&amp;move_up=1&amp;id={$row['id']}&amp;form_id={$row['form_id']}") ,
@@ -249,9 +250,9 @@ class acp_form_maker
 					foreach ($type as $t_name => $t_value)
 					{
 						$template->assign_block_vars('form_template.template_type', array(
-							'TYPE'     => $t_value ,
-							'SELECTED' => ($t_value == $row['type']) ? ' selected="selected"' : '' ,
-							'DISABLED' => $disabled
+							'TYPE'		=> $t_value ,
+							'SELECTED'	=> ($t_value == $row['type']) ? ' selected="selected"' : '' ,
+							'DISABLED'	=> $disabled
 						));
 						$elements++;
 					}

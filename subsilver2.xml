@@ -35,9 +35,13 @@
 			<homepage>http://www.phpbbreland.com/</homepage>
 			<email>o2l@eircom.net</email>
 		</author>
+		<copy>
+			<file from="root/styles/subsilver2/template/portal.js" to="styles/subsilver2/template/portal.js"/>
+			<file from="root/styles/subsilver2/template/forms/form_maker.html" to="styles/subsilver2/template/forms/form_maker.html"/>
+		</copy>
 	</author-group>
 
-	<mod-version>1.0.0</mod-version>
+	<mod-version lang="en"><![CDATA[0.0.2]]></mod-version>
 
 	<installation>
 		<level>intermediate</level>
@@ -48,7 +52,7 @@
 	<history>
 		<entry>
 			<date>2013-07-07</date>
-			<rev-version>1.0.0</rev-version>
+			<rev-version>0.0.2</rev-version>
 			<changelog lang="en">
 				<change>None (still in first release)</change>
 			</changelog>
@@ -59,10 +63,9 @@
 </header>
 
 <action-group>
-		<copy>
-			<file from="root/styles/subsilver2/template/portal.js" to="styles/subsilver2/template/portal.js"/>
-			<file from="root/styles/subsilver2/template/forms/form_maker.html" to="styles/subsilver2/template/forms/form_maker.html"/>
-		</copy>
+<copy>
+      <file from="root/styles/subsilver2/*.*" to="styles/subsilver2/*.*" />
+</copy>
 
 		<open src="styles/subsilver2/template/posting_buttons.html">
 			<edit>

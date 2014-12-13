@@ -78,6 +78,7 @@ How do I delete a form?<br /> &nbsp; &bull; Simply delete all form elements...<b
 <strong>Checkbox:</strong>    One or more options can be selected, if set to mandatory, each and every option in the checkbox group must be checked.<br />
 <strong>Radiobutton:</strong> Only one option can be selected.<br />
 <strong>Selectbox:</strong>   One option from a dropdown list.<br />
+<strong>Attachment:</strong>  Add an image.<br />
 <strong>Email:</strong>       Valid email address.<br />
 <strong>Password:</strong>    For test only...<br />
 <strong>URL:</strong>         A valid URL must be entered.<br /><br /></pre>',

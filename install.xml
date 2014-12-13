@@ -6,7 +6,7 @@
 <header>
 	<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-	<title lang="en">phpBB3 Form Mod</title>
+	<title lang="en">phpBB3 Form Maker/Creator Mod</title>
 
 	<description lang="en">Create forms to collect data from you members in any forum (one form per forum)</description>
 
@@ -24,26 +24,22 @@
 
 	In the next development stage I may add the option to edit a post created by the form mod in form mode....
 
-	---------------------------------------------------------
-     THIS MOD IS FOR PHPBB ONLY, IT IS NOT THE KISS VERSION!
-	---------------------------------------------------------
+	---------------------------------------------------------------------------
+     THIS MOD IS FOR PHPBB ONLY, THE KISS VERSION IS AVAILABLE ON GITHUB!
+	---------------------------------------------------------------------------
 
 	]]></author-notes>
 
-	<github><![CDATA[https://github.com/phpbbireland/form_maker]]></github>
-
 	<author-group>
 		<author>
-			<realname>Michael O’Toole</realname>
 			<username>michaelo</username>
-			<homepage>http://www.phpbbireland.com/</homepage>
-			<contributions-group>
-				<contributions status="current" from="2006-01-01" position="Developer"/>
-			</contributions-group>			
+			<realname>Michael O'Toole</realname>
+			<homepage>http://www.phpbbreland.com/</homepage>
+			<email>o2l@eircom.net</email>
 		</author>
 	</author-group>
 
-	<mod-version>1.0.0</mod-version>
+	<mod-version lang="en"><![CDATA[1.0.1]]></mod-version>
 
 	<installation>
 		<level>intermediate</level>
@@ -54,7 +50,7 @@
 	<history>
 		<entry>
 			<date>2013-07-07</date>
-			<rev-version>1.0.0</rev-version>
+			<rev-version>1.0.1</rev-version>
 			<changelog lang="en">
 				<change>None (still in beta release)</change>
 			</changelog>
@@ -63,14 +59,22 @@
 
 	<meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
 </header>
+	<author-group>
+		<author>
+			<username>michaelo</username>
+			<realname>Michael O'Toole</realname>
+			<homepage>http://www.phpbbreland.com/</homepage>
+			<email>o2l@eircom.net</email>
+		</author>
+	</author-group>
 
 	<action-group>
 		<copy>
 			<file from="root/adm/images/more_info.gif" to="adm/images/more_info.gif"/>
 			<file from="root/adm/images/loading-page.gif" to="adm/images/loading-page.gif"/>
 			<file from="root/adm/style/acp_form_maker.html" to="adm/style/acp_form_maker.html"/>
-			<file from="root/adm/style/portal.js" to="adm/style/portal.js"/>
-			<file from="root/adm/style/jquery-2.0.3.min.js" to="adm/style/jquery-2.0.3.min.js"/>
+			<file from="root/adm/style/form_mod.js" to="adm/style/form_mod.js"/>
+			<file from="root/adm/style/jquery-1.11.1.min.js" to="adm/style/jquery-1.11.1.min.js"/>
 			<file from="root/adm/style/forms/form_maker.html" to="adm/style/forms/form_maker.html"/>
 			<file from="root/includes/functions_form_maker.php" to="includes/functions_form_maker.php"/>
 			<file from="root/includes/acp/acp_form_maker.php" to="includes/acp/acp_form_maker.php"/>
@@ -78,7 +82,7 @@
 			<file from="root/language/en/form_maker_install_umil.php" to="language/en/form_maker_install_umil.php"/>
 			<file from="root/language/en/mods/form_maker.php" to="language/en/mods/form_maker.php"/>
 			<file from="root/language/en/mods/info_acp_form_maker.php" to="language/en/mods/info_acp_form_maker.php"/>
-			<file from="root/styles/prosilver/template/forms/portal.js" to="styles/prosilver/template/forms/portal.js"/>
+			<file from="root/styles/prosilver/template/forms/form_mod.js" to="styles/prosilver/template/forms/form_mod.js"/>
 			<file from="root/styles/prosilver/template/forms/form_maker.html" to="styles/prosilver/template/forms/form_maker.html"/>
 			<file from="root/styles/prosilver/theme/form_mod.css" to="styles/prosilver/theme/form_mod.css"/>
 			<file from="root/umil/*.*" to="umil/*.*" />
@@ -124,32 +128,16 @@ build_form($forum_id);
 		</open>
 		<open src="adm/style/admin.css">
 			<edit>
-				<find><![CDATA[	font-size: x-small;]]></find>
-				<action type="after-add"><![CDATA[/*]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	voice-family: inherit;]]></find>
-				<action type="after-add"><![CDATA[*/]]></action>
-			</edit>
-			<edit>
 				<find><![CDATA[.phpinfo td, .phpinfo th, .phpinfo h2, .phpinfo h1 {
-	text-align: left;]]></find>
-				<action type="after-add"><![CDATA[}
+	text-align: left;
+}]]></find>
 
+<action type="after-add"><![CDATA[/* Form Maker Mod */
+@import url("form_mod.css");
+]]></action>
+</edit>
 
-/* Form Maker Mod */
-.checkbox {cursor:pointer}
-#dvLoading
-{
-   background: transparent url("../images/loading-page.gif") no-repeat center center;
-   height: 100px;
-   width: 100px;
-   position: fixed;
-   z-index: 1000;
-   left: 50%;
-   top:13%;]]></action>
-			</edit>
-		</open>
+</open>
 		<open src="includes/constants.php">
 			<edit>
 				<find><![CDATA[// Additional tables]]></find>
@@ -159,7 +147,7 @@ build_form($forum_id);
 		<open src="styles/prosilver/template/posting_buttons.html">
 			<edit>
 				<find><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/editor.js"></script>]]></find>
-				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/forms/portal.js"></script>]]></action>
+				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_SUPER_TEMPLATE_PATH}/forms/form_mod.js"></script>]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[<div id="format-buttons">]]></find>
