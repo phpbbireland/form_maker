@@ -2,68 +2,6 @@
 * This is a collection of scripts written for Form Mod (Form Creator)
 *****/
 
-var PreloadFlag = false;
-var expDays = 90;
-var exp = new Date(); 
-var tmp = '';
-var tmp_counter = 0;
-var tmp_open = 0;
-
-var exp = new Date();
-
-exp.setTime(exp.getTime() + (expDays*24*60*60*5000));
-
-
-// cookies //
-function SetCookie(name, value) 
-{
-	var argv = SetCookie.arguments;
-	var argc = SetCookie.arguments.length;
-
-	var expires = (argc > 2) ? argv[2] : null;
-	expires = exp;
-	var path = (argc > 3) ? argv[3] : null;
-	var domain = (argc > 4) ? argv[4] : null;
-	var secure = (argc > 5) ? argv[5] : false;
-	document.cookie = name + "=" + escape(value) +
-		((expires == null) ? "" : ("; expires=" + expires.toGMTString())) +
-		((path == null) ? "" : ("; path=" + path)) +
-		((domain == null) ? "" : ("; domain=" + domain)) +
-		((secure == true) ? "; secure" : "");
-}
-
-function getCookieVal(offset) 
-{
-	var endstr = document.cookie.indexOf(";",offset);
-	if (endstr == -1)
-	{
-		endstr = document.cookie.length;
-	}
-	return unescape(document.cookie.substring(offset, endstr));
-}
-
-function GetCookie(name) 
-{
-	var arg = name + "=";
-	var alen = arg.length;
-	var clen = document.cookie.length;
-	var i = 0;
-	while (i < clen) 
-	{
-		var j = i + alen;
-		if (document.cookie.substring(i, j) == arg)
-		{
-			return getCookieVal(j);
-		}
-
-		i = document.cookie.indexOf(" ", i) + 1;
-		if (i == 0)
-		{
-			break;
-		}
-	} 
-	return null;
-}
 
 // Show/Hide element with cookie option
 
@@ -136,10 +74,6 @@ function ShowHide(id1, id2, id3)
 	{
 		switch_visibility(id2);
 	}
-	if (id3 != '')
-	{
-		SetCookie(id3, onoff, exp);
-	}
 }
 	
 function switch_visibility(id) 
@@ -158,27 +92,26 @@ function switch_visibility(id)
 		element = document.layers[id];
 	}
 
-	if (!element) 
+	if (element)
 	{
-		// do nothing
-	}
-	else if (element.style) 
-	{
-		if (element.style.display == "none")
-		{ 
-			element.style.display = ""; 
+		if (element.style) 
+		{
+			if (element.style.display == "none")
+			{ 
+				element.style.display = ""; 
+				return 1;
+			}
+			else
+			{
+				element.style.display = "none";
+				return 2;
+			}
+		}
+		else 
+		{
+			element.visibility = "show"; 
 			return 1;
 		}
-		else
-		{
-			element.style.display = "none";
-			return 2;
-		}
-	}
-	else 
-	{
-		element.visibility = "show"; 
-		return 1;
 	}
 }
 
@@ -200,20 +133,18 @@ function is_hidden(id)
 		element = document.layers[id];
 	}
 
-	if (!element) 
+	if (element)
 	{
-		// do nothing
-		//alert('NOT AN ELEMENT');
-	}
-	else if (element.style) 
-	{
-		if (element.style.display == "none")
-		{ 
-			return(1);
-		}
-		else
+		if (element.style) 
 		{
-			return(0);
+			if (element.style.display == "none")
+			{ 
+				return(1);
+			}
+			else
+			{
+				return(0);
+			}
 		}
 	}
 }
@@ -229,12 +160,12 @@ function toggle_validation_form_mod(main_form, secondary_form)
 	if ($_hidden == 0)
 	{
 		document.getElementById(main_form).noValidate=true;
-		alert('Turned off validation');
+		//alert('Turned off validation');
 	}
 	else
 	{
 		document.getElementById(main_form).noValidate=false;
-		alert('Turned on validation');
+		//alert('Turned on validation');
 	}
 }
 

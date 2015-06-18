@@ -15,9 +15,9 @@
 /**
  * @ignore
  */
-if (! defined('IN_PHPBB'))
+if (!defined('IN_PHPBB'))
 {
-	exit();
+	exit;
 }
 
 class acp_form_maker
@@ -66,7 +66,7 @@ class acp_form_maker
 				}
 
 				$form_id  = (int) request_var('form_id', $first_forum_id);
-				$id = (int) request_var('id', 0);
+				$id = request_var('id', 0);
 
 				$fname = get_forums($form_id);
 
@@ -85,8 +85,8 @@ class acp_form_maker
 
 				if ($move_down || $move_up)
 				{
-					$form_id = (int) request_var('form_id', 0);
-					$id = (int) request_var('id', 0);
+					$form_id = request_var('form_id', 0);
+					$id = request_var('id', 0);
 
 					$sql = 'SELECT ndx_order
 						FROM ' . FORM_MAKER_TABLE . '
@@ -124,8 +124,6 @@ class acp_form_maker
 
 					$move_down = $move_up = false;
 
-					//reload page with current forum_id
-					reload_page($form_id);
 				}
 
 				if($delete)
@@ -135,7 +133,7 @@ class acp_form_maker
 
 					$db->sql_query($sql);
 
-					$form_id = $form_id = (int)request_var('form_id', 0);
+					$form_id = request_var('form_id', 0);
 				}
 
 				//user pressed update contents
@@ -145,7 +143,7 @@ class acp_form_maker
 					$q_names      = utf8_normalize_nfc(request_var('q_name', array(0 => ''), true));
 					$q_hint       = utf8_normalize_nfc(request_var('q_hint', array(0 => ''), true));
 					$q_options    = utf8_normalize_nfc(request_var('q_options', array(0 => ''), true));
-					$form_id      = (int)request_var('form_id', 1);
+					$form_id      = request_var('form_id', 1);
 					$q_ndx_order  = utf8_normalize_nfc(request_var('q_ndx_order', array(0 => ''), true));
 
 					foreach ($q_hint as $key => $form_values)
@@ -175,14 +173,12 @@ class acp_form_maker
 						$db->sql_query($sql);
 					}
 
-					$template->assign_vars(array(
-						'L_FORM_NO_FORM'  => sprintf($user->lang['FORM_NO_FORM'], $fname),
-					));
+					$template->assign_var('L_FORM_NO_FORM', sprintf($user->lang['FORM_NO_FORM'], $fname));
 				}
 
 				if ($addnew)
 				{
-					$form_id = (int) request_var('form_id', 0);
+					$form_id = request_var('form_id', 0);
 
 					$sql = 'SELECT max(ndx_order) + 1 as maxorder
 						FROM ' . FORM_MAKER_TABLE . '
@@ -212,17 +208,13 @@ class acp_form_maker
 					}
 				}
 
-				if($form_id == 0)
-				{
-					$form_id = $form_id;
-				}
 
 				// main sql //
-				$sql = "SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
-					FROM " . FORM_MAKER_TABLE . " AS m, " . FORUMS_TABLE . " AS f
-					WHERE m.form_id = '" . $form_id . "'
-					AND m.form_id = f.forum_id
-					ORDER BY ndx_order";
+				$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
+					FROM ' . FORM_MAKER_TABLE . ' m, ' . FORUMS_TABLE . " f
+					WHERE m.form_id = $form_id
+						AND m.form_id = f.forum_id
+					ORDER BY ndx_order ASC";
 
 				$result = $db->sql_query($sql);
 
@@ -291,18 +283,16 @@ class acp_form_maker
 				break;
 		}
 
+		// Next section is commented out as only used when checking code during development //
+
+
 		$template->assign_vars(array(
-			'REPORT'  => 'Debug: ' . 'Mode = [' . $mode . '] Forum ID = [' . $form_id . '] Elements = [' . $elements . '] Form Name = [' . $fname . ']',
+			'REPORT'  => $user->lang['MODE'] . ' = [' . $mode . '] | ' . $user->lang['ELEMENTS'] . ' = [' . $elements . '] | ' . $user->lang['FORUM_ID'] . ' = [' . $form_id . '] | ' . $user->lang['FORM_NAME'] . ' = [' . $fname . ']',
 			'LINK'	=> $link,
 		));
 
-		build_preview($form_id, $form_id);
+		build_preview($form_id);
 	}
-}
-
-function reload_page($id)
-{
-	;
 }
 
 function get_forums($form_id)
@@ -310,19 +300,32 @@ function get_forums($form_id)
 	global $db, $template, $first_forum_id;
 	$store = '';
 
-	$sql = "SELECT DISTINCT forum_id, forum_name
-		FROM ". FORUMS_TABLE . "
-		WHERE forum_type = " . FORUM_POST . "
-		ORDER BY forum_id";
+	$sql = 'SELECT forum_id, forum_name
+		FROM ' . FORUMS_TABLE . '
+		WHERE forum_type = ' . FORUM_POST . '
+		ORDER BY forum_id ASC';
 
 	$result = $db->sql_query($sql);
 
 	while ($row = $db->sql_fetchrow($result))
 	{
+		$has_form = false;
+		if (has_form($row['forum_id']))
+		{
+			$has_form = true;
+			$chk  = " ✔";
+		}
+		else
+		{
+			$chk  = "";
+		}
+
 		$template->assign_block_vars('forms', array(
 			'FORUM_ID'   => $row['forum_id'],
 			'FORUM_NAME' => $row['forum_name'],
 			'SELECT'     => ($row['forum_id'] == $form_id) ? ' selected="selected"' : '',
+			'HAS_FORM'   => $has_form,
+			'CHK'        => $chk,
 		));
 
 		if ($form_id == $row['forum_id'])
@@ -338,31 +341,30 @@ function get_first_forum_id()
 {
 	global $db, $template, $first_forum_id;
 
-	$sql = "SELECT DISTINCT forum_id
-		FROM ". FORUMS_TABLE . "
-		WHERE forum_type = " . FORUM_POST . "
-		ORDER BY forum_id";
+	$sql = 'SELECT forum_id
+		FROM '. FORUMS_TABLE . '
+		WHERE forum_type = ' . FORUM_POST . '
+		ORDER BY forum_id ASC';
 
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
+	$result = $db->sql_query($sql, 1);
+	$row = $db->sql_fetchfield('forum_id');
 	$db->sql_freeresult($result);
-
-	return($row['forum_id']);
+	return($row);
 }
 
 /***
 * Sections of this code are taken from the Appform Mod, copyright Sajaki 2012
 **/
 
-function build_preview($form_id, $form_id)
+function build_preview($form_id)
 {
 	global $db, $template;
 
-	$sql = "SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
-		FROM " . FORM_MAKER_TABLE . " AS m, " . FORUMS_TABLE . " AS f
-		WHERE m.form_id = '" . $form_id . "'
-		AND m.form_id = f.forum_id
-		ORDER BY ndx_order";
+	$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
+		FROM ' . FORM_MAKER_TABLE . ' m, ' . FORUMS_TABLE . " f
+		WHERE m.form_id = $form_id
+			AND m.form_id = f.forum_id
+		ORDER BY ndx_order ASC";
 
 	$result = $db->sql_query($sql);
 
@@ -370,7 +372,6 @@ function build_preview($form_id, $form_id)
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-
 		if ($row['type'] == 'file')
 		{
 			$file_count++;
@@ -438,8 +439,24 @@ function build_preview($form_id, $form_id)
 	$db->sql_freeresult($result);
 }
 
-function re_index($forum_id)
+function has_form($form_id)
 {
-	; // to do, if required //
+	global $db;
+
+	$sql = 'SELECT forum_name, forum_id
+		FROM ' . FORM_MAKER_TABLE . ' m, ' . FORUMS_TABLE . " f
+		WHERE m.form_id = $form_id
+			AND m.form_id = f.forum_id";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	if ($row)
+	{
+		return(true);
+	}
+	else
+	{
+		return(false);
+	}
 }
 ?>

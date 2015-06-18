@@ -12,6 +12,15 @@
 *
 ***/
 
+jQuery(window).load(function(){
+	jQuery('#dvLoading').fadeOut(1500);
+});
+
+function update_form()
+{
+	document.getElementById('update_button').click();
+}
+
 function Show(id)
 {
 	var element = null;
@@ -74,10 +83,6 @@ function ShowHide(id1, id2, id3)
 	{
 		switch_visibility(id2);
 	}
-	if (id3 != '')
-	{
-		//SetCookie(id3, onoff, exp);
-	}
 }
 	
 function switch_visibility(id) 
@@ -96,27 +101,26 @@ function switch_visibility(id)
 		element = document.layers[id];
 	}
 
-	if (!element) 
+	if (element)
 	{
-		// do nothing
-	}
-	else if (element.style) 
-	{
-		if (element.style.display == "none")
-		{ 
-			element.style.display = ""; 
+		if (element.style) 
+		{
+			if (element.style.display == "none")
+			{ 
+				element.style.display = ""; 
+				return 1;
+			}
+			else
+			{
+				element.style.display = "none";
+				return 2;
+			}
+		}
+		else 
+		{
+			element.visibility = "show"; 
 			return 1;
 		}
-		else
-		{
-			element.style.display = "none";
-			return 2;
-		}
-	}
-	else 
-	{
-		element.visibility = "show"; 
-		return 1;
 	}
 }
 
@@ -138,20 +142,18 @@ function is_hidden(id)
 		element = document.layers[id];
 	}
 
-	if (!element) 
+	if (element)
 	{
-		// do nothing
-		//alert('NOT AN ELEMENT');
-	}
-	else if (element.style) 
-	{
-		if (element.style.display == "none")
-		{ 
-			return(1);
-		}
-		else
+		if (element.style) 
 		{
-			return(0);
+			if (element.style.display == "none")
+			{ 
+				return(1);
+			}
+			else
+			{
+				return(0);
+			}
 		}
 	}
 }
@@ -167,12 +169,12 @@ function toggle_validation_form_mod(main_form, secondary_form)
 	if ($_hidden == 0)
 	{
 		document.getElementById(main_form).noValidate=true;
-		alert('Turned off validation');
+		//alert('Turned off validation');
 	}
 	else
 	{
 		document.getElementById(main_form).noValidate=false;
-		alert('Turned on validation');
+		//alert('Turned on validation');
 	}
 }
 

@@ -53,7 +53,7 @@ How do I delete a form?<br /> &nbsp; &bull; Simply delete all form elements...<b
 'ACP_FORM_MOD_NOTE'       => '<br /><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
 
 
-'CURRENT_FORM'             => 'Current Form',
+'CURRENT_FORM'             => 'Select a Forum to work with (✔) indicated an attached form',
 'FORM_ADD_ITEM'            => 'Add a new form element',
 'FORM_CHECKBOX'            => 'Check Box',
 'FORM_DETAILS'             => 'All forms use a generic template file: styles/prosilver/template/forms/form_maker.html',

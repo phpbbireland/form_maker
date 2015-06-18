@@ -33,6 +33,11 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+/**
+*
+*
+*/
+
 if (!function_exists('build_form'))
 {
 	function build_form($forum_id)
@@ -40,14 +45,14 @@ if (!function_exists('build_form'))
 		global $db, $template, $mode;
 
 		$style = 'style="border-radius: 5px;"';
-		$styleTA = 'style="border-radius: 5px; max-width: 400px;"';
+		$style_ta = 'style="border-radius: 5px; max-width: 400px;"';
 		$entry = "";
 
-		$sql = "SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
-			FROM " . FORM_MAKER_TABLE . " AS m, " . FORUMS_TABLE . " AS f
-			WHERE m.form_id = " . (int)$forum_id . "
+		$sql = 'SELECT id, form_id, ndx_order, name, hint, type, mandatory, options, forum_name, forum_id
+			FROM ' . FORM_MAKER_TABLE . ' m, ' . FORUMS_TABLE . ' f
+			WHERE m.form_id = ' . (int)$forum_id . '
 			AND m.form_id = f.forum_id
-			ORDER BY ndx_order";
+			ORDER BY ndx_order ASC';
 
 		$result = $db->sql_query($sql);
 
@@ -55,18 +60,29 @@ if (!function_exists('build_form'))
 		{
 			if ($row['mandatory'])
 			{
-				$mand = " required ";
+				$mandatory = " required ";
 			}
 			else
 			{
-				$mand = "";
+				$mandatory = "";
 			}
+
+			$temp_name = $row['name'];
 
 			$row['name'] = str_replace(' ', '_', $row['name']);
 
-			// make thigs a little easier to read //
-			$na = "name='templatefield_" . $row['name'] . "'";
-			$id = "id='templatefield_" . $row['name'] . "'";
+			// make thigs even easier to read //
+			$name = "name='templatefield_{$row['name']}'";
+			$id = "id='templatefield_{$row['name']}'";
+			$placeholder = "placeholder='{$row['hint']}' ";
+			$tabindex = "tabindex='{$row['ndx_order']}' ";
+
+			$type = "type='{$row['type']}' ";
+
+			$size='size="40" ';
+			$maxlength = 'maxlength="255" ';
+			$cols='rows="3"';
+			$rows='cols="76"';
 
 			switch (strtolower($row['type']))
 			{
@@ -75,15 +91,19 @@ if (!function_exists('build_form'))
 				case 'url':
 				case 'text':
 				case 'file':
-					$entry = '<input type="' . $row['type'] . '"' . $na . '" value="' . $row['hint'] . '"' . $id . '" placeholder="' . $row['hint'] . '" ' . $mand . ' size="40" maxlength="255" tabindex="' . $row['ndx_order'] . '" ' . $style . ' />';
+
+					$entry = '<input ' . $type . $name . $id . $placeholder . $mandatory . $size . $maxlength . $tabindex . $style . ' />';
+
 				break;
 
 				case 'textbox':
-					$entry = '<textarea type="textbox"' . $na . '"' . $id . '" rows="3" cols="76" tabindex="' . $row['ndx_order'] . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" placeholder="' . $row['hint'] . '"' . $mand . ' ' . $styleTA . '></textarea>';
+
+					$entry = '<textarea ' . $type . $name . $id . $rows . $cols . $tabindex . $placeholder . $mandatory . $style_ta . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);"></textarea>';
 				break;
 
 				case 'selectbox':
-					$entry = '<select type="select"' . $na . '"' . $id . '" tabindex="' . $row['ndx_order'] . '"' . $mand . ' ' . $style . '>';
+
+					$entry = '<select ' . $type . $name . $id . $tabindex . $mandatory . $style . '>';
 					$entry .= '<option value="">----------------</option>';
 					$select_option = explode(',', $row['options']);
 					foreach($select_option as $value)
@@ -94,11 +114,12 @@ if (!function_exists('build_form'))
 				break;
 
 				case 'radiobuttons':
+
 					$radio_option = explode(',', $row['options']);
 					$entry = '';
 					foreach($radio_option as $value)
 					{
-					   $entry .='<input type="radio" ' . '" tabindex="' . $row['ndx_order'] . '"' . $mand . $na . '"' . $id . '" value="'. $value .'"/>&nbsp;'. $value .'&nbsp;&nbsp;';
+					   $entry .='<input type="radio" ' . $tabindex . $mandatory . $name . $id . '" value="'. $value .'"/>&nbsp;'. $value . '&nbsp;&nbsp;';
 					}
 				break;
 
@@ -108,7 +129,7 @@ if (!function_exists('build_form'))
 					$entry = '';
 					foreach($check_option as $value)
 					{
-					   $entry .='<input type="checkbox" ' . '" tabindex="' . $row['ndx_order'] . '"' . $mand . ' name="templatefield_' . $row['name'] .'[]"' . $id . '" value="'. $value .'" />&nbsp;'. $value .'&nbsp;&nbsp;';
+					   $entry .='<input ' . $type . $tabindex . $mandatory . ' name="templatefield_' . $row['name'] .'[]"' . $id . '" value="'. $value .'" />&nbsp;'. $value .'&nbsp;&nbsp;';
 					}
 				break;
 
@@ -118,7 +139,7 @@ if (!function_exists('build_form'))
 
 			$mandatory = '';
 
-			if ($row['mandatory'] == '1')
+			if ($row['mandatory'])
 			{
 				$mandatory = '<span class="mandatory">*</span>';
 			}
@@ -142,23 +163,28 @@ if (!function_exists('build_form'))
 	}
 }
 
+/**
+*	Grab the form data from db and build the form for this forum...
+*	Takes the forum id to process...
+*	Returns the parsed form (html code)...
+*/
+
 if (!function_exists('grab_form_data'))
 {
 	function grab_form_data($forum_id)
 	{
 		global $auth, $config, $db, $user, $phpbb_root_path, $phpEx;
 
-		$ret = $appform_post = $cr_chr = '';
-		$name_length_max = 1;
-		$file_count = 0;
-		$form_data = array();
+		$ret = $appform_post = $last_checked = $temp = '';
+		$name_length_max = $file_count = 0;
+		$form_data = $names = array();
 
 		$config['title_colour'] = (isset($config['title_colour'])) ? $config['title_colour'] : '#FF0000';
 
-		$sql = "SELECT *
-			FROM " . FORM_MAKER_TABLE . "
-			WHERE form_id = " . (int)$forum_id . "
-			ORDER BY ndx_order";
+		$sql = 'SELECT *
+			FROM ' . FORM_MAKER_TABLE . '
+			WHERE form_id = ' . (int)$forum_id . '
+			ORDER BY ndx_order ASC';
 		$result = $db->sql_query($sql);
 
 		while ($row = $db->sql_fetchrow($result))
@@ -173,59 +199,51 @@ if (!function_exists('grab_form_data'))
 				'type'       => $row['type'],
 				'ndx_order'  => $row['ndx_order'],
 			);
+
+			if ($row['type'] == 'file')
+			{
+				$files[] = $row['name'];
+			}
 		}
 		$db->sql_freeresult($result);
 
-		// get longest name for padding calculation //
-		foreach ($form_data as $data)
+		if (!class_exists('fileupload'))
 		{
-			$len = strlen($data['name']);
-
-			if ($name_length_max < $len)
-			{
-				$name_length_max = $len;
-			}
+			include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
 		}
 
-		// grab the name of the attached file //
-		foreach($_FILES as $key => $file)
+		$upload = new fileupload();
+
+		if (isset($files))
 		{
-			if(isset($file['name']))
+			foreach($files as $name)
 			{
-				$names[] = $key;
+				$temp = $upload->form_upload('templatefield_' . $name);
+
+				if ($temp->get('realname'))
+				{
+					$names[] = $temp->get('realname');
+				}
 			}
 		}
 
 		foreach ($form_data as $row)
 		{
-			$spaces = " ";
-			$na = "";
-
-			for ($i = 0; $i < (($name_length_max + 1) - strlen($row['name'])); $i++)
-			{
-				$spaces .=  " ";
-			}
-
-			// make textbox look nicer //
-			if ($row['type'] == 'textbox')
-			{
-				$ret = $spaces;
-			}
-
+			$name = "";
 			$row['name'] = str_replace(' ', '_', $row['name']);
-			$na = "templatefield_" . $row['name'] . "";
+			$name = "templatefield_" . $row['name'];
 
-			if (isset($_POST[$na]) || isset($_FILES['templatefield_' . $row['name']]))
+			if (isset($row['type']))
 			{
 				switch ($row['type'])
 				{
 					case 'checkbox':
+
 						$check_box_items = count(request_var('templatefield_' . $row['name'], array(0 => 0)));
 						$check_box_count = 0;
+						$appform_post .= '[b]' . $row['name'] . ':[/b][fbox]';
 
-						$appform_post .= '[b]' . $row['name'] . ':' . $spaces .' [/b]';
-
-						$checkbox = utf8_normalize_nfc(request_var($na, array(0 => '') , true));
+						$checkbox = utf8_normalize_nfc(request_var($name, array(0 => '') , true));
 
 						foreach ($checkbox as $value)
 						{
@@ -237,7 +255,7 @@ if (!function_exists('grab_form_data'))
 							}
 							$check_box_count++;
 						}
-						$appform_post .= '<br />';
+						$appform_post .= '[/fbox]';
 
 					break;
 
@@ -247,68 +265,54 @@ if (!function_exists('grab_form_data'))
 					case 'text':
 					case 'selectbox':
 					case 'radiobuttons':
-						$fieldcontents = utf8_normalize_nfc(request_var($na, ' ', true));
-						$appform_post .= '[b]' . $row['name'] . ':' . $spaces . '[/b]';
-						$appform_post .= $fieldcontents .= '<br />';
+						$fieldcontents = utf8_normalize_nfc(request_var($name, ' ', true));
+						// only process if element has valid data //
+						if ($fieldcontents)
+						{
+							$appform_post .= '[b]' . $row['name'] . ':[/b][fbox]';
+							$appform_post .= $fieldcontents .= '[/fbox]';
+						}
 					break;
 
 					case 'file':
-						$fieldcontents = '[attachment=' . $file_count . ']' . $_FILES[$names[$file_count]]['name'] . '[/attachment]';
-						$file_count++;
-						$appform_post .= '[/tab]<br />';
-						$appform_post .= $fieldcontents .= '[tab]';
+						if (isset($names[$file_count]))
+						{
+							$fieldcontents = utf8_normalize_nfc(request_var($name, ' ', true));
+							// only process if element has valid data //
+							if ($fieldcontents)
+							{
+								$appform_post .= '[b]' . $row['name'] . ':[/b][att]';
+								$fieldcontents = '[attachment=' . $file_count . ']' . $names[$file_count] . '[/attachment]';
+								$file_count++;
+								$appform_post .= '<br />';
+								$appform_post .= $fieldcontents .= '[/att]';
+							}
+						}
 					break;
 
 					case 'textbox':
-						$fieldcontents = utf8_normalize_nfc(request_var($na, ' ', true));
-						$appform_post .= '[b]' . $row['name'] . ':' . $spaces . '[/b]';
-
-						for ($i = 0; $i < strlen($fieldcontents); $i++)
+						$fieldcontents = utf8_normalize_nfc(request_var($name, ' ', true));
+						// only process if element has valid data //
+						if ($fieldcontents)
 						{
-							if ($fieldcontents[$i] == "\0" || $fieldcontents[$i] == "\n\r" || $fieldcontents[$i] == "\n")
-							{
-								$cr_chr = $fieldcontents[$i];
-							}
+							$appform_post .= '[b]' . $row['name'] . ':[/b][fbox]';
+							$appform_post .= $fieldcontents .= '[/fbox]';
 						}
-
-						$k = strlen($spaces);
-						$x = strlen($row['name']);
-						$spaces = "  ";
-						for ($j = 0; $j < $x + $k; $j++)
-						{
-							$spaces .= " ";
-						}
-
-						if ($cr_chr != '')
-						{
-							$fieldcontents = str_replace($cr_chr, $cr_chr . $spaces, $fieldcontents);
-						}
-
-						$appform_post .= $fieldcontents .= '<br />';
-
 					break;
 
 					default:
 					break;
 				}
 			}
-			else
-			{
-				//echo 'Error name = [' .  $na . ']<br/>';
-			}
 		}
-		return('[tab]' . $appform_post . '[/tab]');
+
+		// prevent posting if form is empty //
+		if ($fieldcontents == '')
+		{
+			return;
+		}
+		else return('[form]' . $appform_post . '[/form]');
 	}
-}
-
-
-if (!function_exists('build_edit_form'))
-{
-	function build_edit_form($forum_id, $message)
-	{
-		return; // next time //
-	}
-
 }
 
 ?>

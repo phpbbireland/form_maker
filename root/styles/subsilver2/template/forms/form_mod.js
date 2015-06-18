@@ -2,6 +2,7 @@
 * This is a collection of scripts written for Form Mod (Form Creator)
 *****/
 
+
 // Show/Hide element with cookie option
 
 /*** 
@@ -73,10 +74,6 @@ function ShowHide(id1, id2, id3)
 	{
 		switch_visibility(id2);
 	}
-	if (id3 != '')
-	{
-		//SetCookie(id3, onoff, exp);
-	}
 }
 	
 function switch_visibility(id) 
@@ -95,27 +92,26 @@ function switch_visibility(id)
 		element = document.layers[id];
 	}
 
-	if (!element) 
+	if (element)
 	{
-		// do nothing
-	}
-	else if (element.style) 
-	{
-		if (element.style.display == "none")
-		{ 
-			element.style.display = ""; 
+		if (element.style) 
+		{
+			if (element.style.display == "none")
+			{ 
+				element.style.display = ""; 
+				return 1;
+			}
+			else
+			{
+				element.style.display = "none";
+				return 2;
+			}
+		}
+		else 
+		{
+			element.visibility = "show"; 
 			return 1;
 		}
-		else
-		{
-			element.style.display = "none";
-			return 2;
-		}
-	}
-	else 
-	{
-		element.visibility = "show"; 
-		return 1;
 	}
 }
 
@@ -137,12 +133,7 @@ function is_hidden(id)
 		element = document.layers[id];
 	}
 
-	if (!element) 
-	{
-		// do nothing
-		//alert('NOT AN ELEMENT');
-	}
-	else if (element.style) 
+	if (element.style) 
 	{
 		if (element.style.display == "none")
 		{ 

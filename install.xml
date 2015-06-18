@@ -39,20 +39,43 @@
 		</author>
 	</author-group>
 
-	<mod-version><![CDATA[1.0.2]]></mod-version>
+	<mod-version><![CDATA[1.0.4]]></mod-version>
 
 	<installation>
 		<level>intermediate</level>
 		<time>500</time>
-		<target-version>3.0.12</target-version>
+		<target-version>3.0.14</target-version>
 	</installation>
 
 	<history>
 		<entry>
+			<date>2014-06-04</date>
+			<rev-version>1.0.1</rev-version>
+			<changelog lang="en">
+				<change>Validation submission</change>
+			</changelog>
+		</entry>
+		<entry>
 			<date>2014-12-13</date>
 			<rev-version>1.0.2</rev-version>
 			<changelog lang="en">
-				<change>None (still in beta release)</change>
+				<change>Validation Fixes (still in beta release)</change>
+			</changelog>
+		</entry>
+		<entry>
+			<date>2015-02-18</date>
+			<rev-version>1.0.3</rev-version>
+			<changelog lang="en">
+				<change>Validation Fixes (still in beta release)</change>
+			</changelog>
+		</entry>
+		<entry>
+			<date>2015-06-18</date>
+			<rev-version>1.0.4</rev-version>
+			<changelog lang="en">
+				<change>Fixes as per validation...</change>
+				<change>Updated javascrit jQuery...</change>
+				<change>Update dropdown list to identify Forums with attached Forms</change>
 			</changelog>
 		</entry>
 	</history>
@@ -66,8 +89,9 @@
 			<file from="root/adm/images/more_info.gif" to="adm/images/more_info.gif"/>
 			<file from="root/adm/images/loading-page.gif" to="adm/images/loading-page.gif"/>
 			<file from="root/adm/style/acp_form_maker.html" to="adm/style/acp_form_maker.html"/>
+			<file from="root/adm/style/form_mod.css" to="adm/style/form_mod.css"/>
 			<file from="root/adm/style/form_mod.js" to="adm/style/form_mod.js"/>
-			<file from="root/adm/style/jquery-1.11.1.min.js" to="adm/style/jquery-1.11.1.min.js"/>
+			<file from="root/adm/style/jquery-2.1.3.min.js" to="adm/style/jquery-2.1.3.min.js"/>
 			<file from="root/adm/style/forms/form_maker.html" to="adm/style/forms/form_maker.html"/>
 			<file from="root/includes/functions_form_maker.php" to="includes/functions_form_maker.php"/>
 			<file from="root/includes/acp/acp_form_maker.php" to="includes/acp/acp_form_maker.php"/>
@@ -210,9 +234,18 @@ build_form($forum_id);
 		<diy-instructions lang="en-gb"><![CDATA[
 		Add the following bbcode in: ACP > POSTING:
 
-		BBCode usage >      [tab]{TEXT}[/tab]
+		BBCode usage >      [att]{TEXT}[/att]
+		HTML replacement >  <div class="att">{TEXT}</div>
+		Help line >         [att]{TEXT}[/att]
+
+		BBCode usage >      [fbox]{TEXT}[/fbox]
+		HTML replacement >  <div class="fbox">{TEXT}</div>
+		Help line >         [fbox]{TEXT}[/fbox]
+
+		BBCode usage >      [form]{TEXT}[/form]
 		HTML replacement >  <pre>{TEXT}</pre>
-		Help line >         [tab]{TEXT}[/tab]
+		Help line >         [form]{TEXT}[/form]
+
 		
 		Purge cache...]]></diy-instructions>
 	</action-group>

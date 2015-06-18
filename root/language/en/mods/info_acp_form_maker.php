@@ -31,6 +31,11 @@ $lang = array_merge($lang, array(
 	'ACP_FORM_MAKER'              => 'phpBB Form Creator',
 	'ACP_FORM_MAKER_CONFIG'       => 'Form Maker Config',
 	'acl_a_form_maker'            => array('lang' => 'Can manage Form Maker', 'cat' => 'posting'),
+
+	'MODE'		=> ' Mode',
+	'ELEMENTS'	=> 'Elements',
+	'FORM_NAME'	=> 'Fourm Name',
+	'FORUM_ID'	=> 'Forum ID',
 ));
 
 ?>

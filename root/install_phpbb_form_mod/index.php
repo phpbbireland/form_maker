@@ -46,7 +46,7 @@ $versions = array(
 	// Version 1.0.0
 	'1.0.0' => array(
 		'permission_add' => array(
-			array('a_form_maker', 1),
+			array('a_form_maker', true),
 		),
 
 		'permission_set' => array(
