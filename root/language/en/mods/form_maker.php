@@ -46,7 +46,10 @@ $lang = array_merge($lang, array(
 
 'ACP_FORM_MAKER_EXPLAIN_2' => 'How do I change the form?<br /> &nbsp; &bull; Select a new form from the <strong><i>Current Form</i></strong> dropdown box...<br /><br />
 How do I add a new form element?<br /> &nbsp; &bull; Use <strong><i>Add a new form element</i></strong>.<br /><br />
-How do I delete a form?<br /> &nbsp; &bull; Simply delete all form elements...<br /><br />
+How do I delete a form?<br /> &nbsp; &bull; Simply delete all form elements...<br /><br /><hr />
+How many forms per forum?<br /> &nbsp; &bull; You can create one Form per Forum...<br /><br />
+What effect does deleting or editing a form have on posts previously created using the form?<br />
+&nbsp; &bull; Alterations/Deletions to Forms has no effect on previously written posts...<br /><br /><hr />
 <strong>&#8730;</strong> The checkmark character indicated an item is mandatory and cannot be empty.<br />',
 
 'ACP_FORM_MOD_MORE_INFO'  => 'Click Me for More Info.',

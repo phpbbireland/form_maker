@@ -315,4 +315,12 @@ if (!function_exists('grab_form_data'))
 	}
 }
 
+if (!function_exists('build_edit_form'))
+{
+	function build_edit_form($forum_id, $message)
+	{
+		return; // next time //
+	}
+}
+
 ?>

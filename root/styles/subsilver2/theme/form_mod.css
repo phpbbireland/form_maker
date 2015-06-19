@@ -13,7 +13,7 @@
 	margin-left: 17.5em; 
 	text-align:left;
 }
-pre {font-family: Consolas, monospace; font-size: 1em; overflow: auto}
+/*pre {font-family: Consolas, monospace; font-size: 1em; overflow: auto}*/
 
 .fbox {
 	background: #FFF none repeat-x 0 0;
@@ -27,14 +27,11 @@ pre {font-family: Consolas, monospace; font-size: 1em; overflow: auto}
 	*/
 
 	padding: 3px 3px 3px 5px;
-	
 	width: 500px;
 	overflow:auto;
 	height: auto;
-
 	border: solid 1px #E3E5E5;
 	box-shadow: 1px 1px 1px 1px #BBB;
-	//box-shadow: 2px 2px 2px 2px #BBB;
 	border-radius: 3px;
 	text-align: left;
 
@@ -72,5 +69,7 @@ pre {font-family: Consolas, monospace; font-size: 1em; overflow: auto}
 	text-align:left;
 	overflow: auto;
 	*/
-
 }
+
+/* limit the size of attached images */
+.file > .attach-image > img {max-width:400px; max-height:200px}

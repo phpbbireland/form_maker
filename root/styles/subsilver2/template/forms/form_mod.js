@@ -133,15 +133,18 @@ function is_hidden(id)
 		element = document.layers[id];
 	}
 
-	if (element.style) 
+	if (element)
 	{
-		if (element.style.display == "none")
-		{ 
-			return(1);
-		}
-		else
+		if (element.style) 
 		{
-			return(0);
+			if (element.style.display == "none")
+			{ 
+				return(1);
+			}
+			else
+			{
+				return(0);
+			}
 		}
 	}
 }
@@ -157,12 +160,12 @@ function toggle_validation_form_mod(main_form, secondary_form)
 	if ($_hidden == 0)
 	{
 		document.getElementById(main_form).noValidate=true;
-		alert('Turned off validation');
+		//alert('Turned off validation');
 	}
 	else
 	{
 		document.getElementById(main_form).noValidate=false;
-		alert('Turned on validation');
+		//alert('Turned on validation');
 	}
 }
 
