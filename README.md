@@ -10,4 +10,6 @@ If the forms are used to collect crucial data, you may wish to add your own java
 This code has been validated by phpBB dev team but code here may contain minor updates...
 
 Current code tested with phpBB 3.0.14  
+
+In the next and possibly the last revision for 3.0, I will add the ability to edit posts (created using forms), as forms. After that it's on to 3.1...  
 Mike
