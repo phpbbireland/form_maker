@@ -1,5 +1,8 @@
 **phpBB Form Creator (Form Maker)**
 
+**Security update**
+Security: All jquery should be updated to > 3.5.0
+
 Our original Form Maker mod was rewritten to include some of the Appform mod code, albeit slightly alter and extended. Therefore a lot of the credit for the new version goes to Sajaki @ www.bbdkp.com for his Appform Mod (A phpBB3 MOD).
 
 Validation of form data relies on HTML5 (client side validation) and is supported in Firefox, Opera, Chrome, IE 10 and other browsers...
